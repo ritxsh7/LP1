@@ -1,0 +1,59 @@
+import java.util.Scanner;
+
+public class BestWorstFitMemoryAllocation {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the number of memory blocks: ");
+        int numBlocks = scanner.nextInt();
+
+        int[] blocks = new int[numBlocks];
+        boolean[] allocated = new boolean[numBlocks];
+
+        System.out.println("Enter the size of each memory block:");
+        for (int i = 0; i < numBlocks; i++) {
+            blocks[i] = scanner.nextInt();
+            allocated[i] = false;
+        }
+
+        System.out.print("Enter the number of processes: ");
+        int numProcesses = scanner.nextInt();
+
+        int[] processes = new int[numProcesses];
+
+        System.out.println("Enter the size of each process:");
+        for (int i = 0; i < numProcesses; i++) {
+            processes[i] = scanner.nextInt();
+        }
+
+        System.out.print("Choose the allocation strategy (1 for Best-Fit, 2 for Worst-Fit): ");
+        int strategy = scanner.nextInt();
+
+        for (int i = 0; i < numProcesses; i++) {
+            int allocatedIdx = -1;
+
+            for (int j = 0; j < numBlocks; j++) {
+                if (!allocated[j] && blocks[j] >= processes[i]) {
+                    if (allocatedIdx == -1) {
+                        allocatedIdx = j;
+                    } else {
+                        if (strategy == 1 && blocks[j] < blocks[allocatedIdx]) {
+                            allocatedIdx = j; // Best-Fit
+                        } else if (strategy == 2 && blocks[j] > blocks[allocatedIdx]) {
+                            allocatedIdx = j; // Worst-Fit
+                        }
+                    }
+                }
+            }
+
+            if (allocatedIdx != -1) {
+                allocated[allocatedIdx] = true;
+                System.out.println("Process " + i + " allocated to block " + allocatedIdx);
+            } else {
+                System.out.println("Process " + i + " cannot be allocated");
+            }
+        }
+
+        scanner.close();
+    }
+}

@@ -1,0 +1,55 @@
+import java.util.Scanner;
+
+public class PreemptiveFCFS {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter the number of processes: ");
+        int n = sc.nextInt();
+        int[] bt = new int[n];
+        int[] wt = new int[n];
+        int[] tat = new int[n];
+        int[] p = new int[n];
+        int[] tempBt = new int[n];
+        
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter the burst time for process " + (i + 1) + ": ");
+            bt[i] = sc.nextInt();
+            p[i] = i + 1;
+        }
+        
+        for (int i = 0; i < n; i++) {
+            tempBt[i] = bt[i];
+        }
+        
+        int t = 0;
+        int complete = 0;
+        
+        while (complete != n) {
+            int shortestBtIndex = -1;
+            int shortestBt = Integer.MAX_VALUE;
+            
+            for (int i = 0; i < n; i++) {
+                if (tempBt[i] > 0 && tempBt[i] < shortestBt) {
+                    shortestBt = tempBt[i];
+                    shortestBtIndex = i;
+                }
+            }
+            
+            if (shortestBtIndex == -1) {
+                t++;
+                continue;
+            }
+            
+            wt[shortestBtIndex] = t;
+            t += tempBt[shortestBtIndex];
+            tempBt[shortestBtIndex] = 0;
+            tat[shortestBtIndex] = t;
+            complete++;
+        }
+        
+        System.out.println("Process\tBurst Time\tWaiting Time\tTurnaround Time");
+        for (int i = 0; i < n; i++) {
+            System.out.println("P" + p[i] + "\t" + bt[i] + "\t\t" + wt[i] + "\t\t" + tat[i]);
+        }
+    }
+}

@@ -1,0 +1,64 @@
+import java.util.Scanner;
+
+public class MemoryAllocation {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the number of memory blocks: ");
+        int numBlocks = scanner.nextInt();
+
+        int[] blocks = new int[numBlocks];
+        boolean[] allocated = new boolean[numBlocks];
+
+        System.out.println("Enter the size of each memory block:");
+        for (int i = 0; i < numBlocks; i++) {
+            blocks[i] = scanner.nextInt();
+            allocated[i] = false;
+        }
+
+        System.out.print("Enter the number of processes: ");
+        int numProcesses = scanner.nextInt();
+
+        int[] processes = new int[numProcesses];
+
+        System.out.println("Enter the size of each process:");
+        for (int i = 0; i < numProcesses; i++) {
+            processes[i] = scanner.nextInt();
+        }
+
+        // First-Fit Memory Allocation
+        for (int i = 0; i < numProcesses; i++) {
+            for (int j = 0; j < numBlocks; j++) {
+                if (!allocated[j] && blocks[j] >= processes[i]) {
+                    allocated[j] = true;
+                    System.out.println("First-Fit: Process " + i + " allocated to block " + j);
+                    break;
+                }
+            }
+        }
+
+        // Reset allocation flags for best-fit
+        for (int i = 0; i < numBlocks; i++) {
+            allocated[i] = false;
+        }
+
+        // Best-Fit Memory Allocation
+        for (int i = 0; i < numProcesses; i++) {
+            int bestFitIdx = -1;
+            for (int j = 0; j < numBlocks; j++) {
+                if (!allocated[j] && blocks[j] >= processes[i]) {
+                    if (bestFitIdx == -1 || blocks[j] < blocks[bestFitIdx]) {
+                        bestFitIdx = j;
+                    }
+                }
+            }
+
+            if (bestFitIdx != -1) {
+                allocated[bestFitIdx] = true;
+                System.out.println("Best-Fit: Process " + i + " allocated to block " + bestFitIdx);
+            }
+        }
+
+        scanner.close();
+    }
+}
